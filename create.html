@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#">Local stoarge</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="./index.html">Home</a>
+                  </li>
+                </ul>
+                <form class="d-flex">
+                 
+                  <button class="btn btn-light px-4"><a href="./create.html" class="nav-link p-0 text-dark">Create</a></button>
+                 
+                </form>
+              </div>
+            </div>
+          </nav>
+    </header>
+    
+    <div class="container-fluid p-3">
+        <div class="row">
+            <div class="col-md-5 m-auto">
+               <form onsubmit="saveHandler(event)">
+                <div class="card p-3">
+                    <div class="form-group mt-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" placeholder="Enter notes title" class="form-control" id="title">
+                        <small id="titleError"></small>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label for="title" class="form-label">Content</label>
+                       <textarea name="content" id="content" placeholder="Enter notes here.." class="form-control" rows="5"></textarea>
+                       <small id="contentError"></small>
+                    </div>
+                    <div class="form-group mt-3 d-flex justify-content-end gap-2">
+                        <button class="btn btn-primary" type="submit">Save</button>
+                        <button class="btn btn-danger" type="reset">Cancel</button>
+                    </div>
+                </div>
+               </form>
+            </div>
+        </div>
+    </div>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+        let titleError = document.getElementById('titleError');
+        let conetntError = document.getElementById('contentError');
+        let title = document.getElementById('title');
+        let content = document.getElementById('content');
+        var notesArray = [];
+
+        if(localStorage.getItem('notes')){
+            notesArray = JSON.parse(localStorage.getItem('notes'));
+            console.log(notesArray);
+            
+        }
+
+        function saveHandler(e){
+            e.preventDefault(); //prevents the page reload
+            if(title.value == "" || title.length==0){
+                titleError.innerHTML = '<span style="color:red;">Please fill the title.</span>'
+            }else  if(content.value=="" || content.value.length ==0){
+                titleError.innerHTML = ""
+                 conetntError.innerHTML = '<span style="color:red;">Please fill the content.</span>'
+            }else{
+                titleError.innerHTML = "";
+                conetntError.innerHTML = "";
+
+                const newNotes = {
+                    notesTitle:title.value,
+                    notesContent:content.value,
+                    time:new Date()
+                }
+                console.log(newNotes);
+                notesArray.push(newNotes);
+                console.log(notesArray);
+                localStorage.setItem('notes', JSON.stringify(notesArray))
+                alert('Notes Saved.');
+                window.location.href = './index.html'
+
+            }
+           
+
+
+        }
+    </script>
+</body>
+</html>

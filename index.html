@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#">Local stoarge</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="./index.html">Home</a>
+                  </li>
+                </ul>
+                <form class="d-flex">
+                 
+                  <button class="btn btn-light px-4"><a href="./create.html" class="nav-link p-0 text-dark">Create</a></button>
+                 
+                </form>
+              </div>
+            </div>
+          </nav>
+    </header>
+    <section class="container p-3 p-ms-5" >
+        <div class="row" id="allnotes">
+
+        </div>
+    </section>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+        let notesContainer = document.getElementById('allnotes');
+        var allNotes = [];
+        
+        function getData(){
+            if(localStorage.getItem('notes') || allNotes.length!=0){
+               allNotes = JSON.parse(localStorage.getItem('notes'));
+                console.log(allNotes);
+                notesContainer.innerHTML = ""
+                allNotes.map((item, index)=>{
+                    notesContainer.innerHTML += `
+                    <div class="col-md-3 mb-3">
+                        <div class="card p-3 h-100">
+                            <h1 class="fs-4">${item.notesTitle}</h1>  
+                            <p class="fs-6 text-secondary">${item.notesContent}</p>  
+                            <hr>
+                            <div class="d-flex align-items-center">
+                                <small class="small text-success"> ${whatsAppTimer(new Date(item.time))} <span class="text-dark">Created<span></small>
+                              <a class="nav-link" href="#" ><i class="fa-regular fa-pen-to-square text-success"></i></a>
+                             <i class="fa-solid fa-trash-can text-danger" onclick="deletehandler(${index})"></i>
+                            </div>
+                        </div>
+                        </div>
+                    `
+                })
+                
+            }else{
+                notesContainer.innerHTML = `
+               <div class="col-md-4 m-auto">
+                 <div class="card p-3 text-center">
+                    <h1 class="fs-2">No date Found</h1>
+                    <button class=" btn btn-primary"><a href="./create.html" class="p-0 nav-link text-light">Create Your First Notes</a></button>
+                    </div>
+                </div>
+                `
+            }
+        }
+        getData();
+
+        function deletehandler(i){
+            console.log(allNotes);
+            ;
+            let filteredArray = allNotes.filter((item, index)=>index!=i);
+            console.log(filteredArray);
+            localStorage.setItem('notes', JSON.stringify(filteredArray));
+            window.location.reload();
+            
+        }
+
+        function check(){
+            if(allNotes.length==0){
+                notesContainer.innerHTML = `
+               <div class="col-md-4 m-auto">
+                 <div class="card p-3 text-center">
+                    <h1 class="fs-2">No date Found</h1>
+                    <button class=" btn btn-primary"><a href="./create.html" class="p-0 nav-link text-light">Create Your First Notes</a></button>
+                    </div>
+                </div>
+                `
+            }
+        }
+        setInterval('check()', 100);
+
+        function whatsAppTimer(messageTime){ 
+            console.log(messageTime);
+            
+            let currenttime = new Date();//current time
+            
+            let diffrenceTime = currenttime - messageTime; //1738129
+
+            console.log(diffrenceTime);
+
+            let seconds = Math.floor(diffrenceTime/1000);
+            let minutes = Math.floor(seconds/60);
+            let hours = Math.floor(minutes/60);
+            let day = Math.floor(hours/24); //1
+
+            if(day>0){
+                return `${day} days ago`
+            }else if(hours>0){
+                   return `${hours} hours ago`
+            }else if(minutes>0){
+                   return `${minutes} minutes ago`
+            }else{
+                return 'Just now'
+            }
+
+        }
+    </script>
+</body>
+</html>
